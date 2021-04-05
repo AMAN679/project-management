@@ -1,7 +1,7 @@
 package com.aman.ppmapp.security;
 
 import java.io.IOException;
-import java.util.Collection;
+
 import java.util.Collections;
 
 import javax.servlet.FilterChain;
@@ -31,7 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	private CustomUserDetailsService customUserDetailsService;
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -44,9 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		{
 			Long userId=tokenProvider.getUserIdFromJWT(jwt);
 			User userDetails=customUserDetailsService.loadUserById(userId);
-			
-			UsernamePasswordAuthenticationToken authentication=new UsernamePasswordAuthenticationToken(userDetails, null, (Collection<? extends GrantedAuthority>) Collections.emptyList());
-		    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			//UsernamePasswordAuthenticationToken authentication=new UsernamePasswordAuthenticationToken(userDetails, null, (Collection<? extends GrantedAuthority>) Collections.emptyList());
+		    
+			UsernamePasswordAuthenticationToken authentication=new UsernamePasswordAuthenticationToken(userDetails, null,Collections.<GrantedAuthority>emptyList());
+			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		    SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		}
